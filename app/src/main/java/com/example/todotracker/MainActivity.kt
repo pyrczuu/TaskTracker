@@ -58,7 +58,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             TodoTrackerTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    CardsList()
+                    CardsList(modifier = Modifier.padding(innerPadding))
                 }
             }
         }
@@ -80,8 +80,6 @@ fun TaskCard(
         Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center,
-//                modifier = Modifier
-//                    .background(color = Color.Red)
             ) {
             Text(
                     modifier = Modifier
@@ -103,12 +101,9 @@ fun TaskCard(
 //                .background(color = Color.Blue)
                 .padding(16.dp)
         ) {
-            var sliderPosition by remember { mutableFloatStateOf(1f) }
-            Slider(
-                value = sliderPosition,
-                onValueChange = {sliderPosition = it; task.stepsCompleted = it.toInt()},
-                steps = task.stepsTotal,
-                valueRange = 0f..task.stepsTotal.toFloat()
+            customProgressIndicator(
+                task = task,
+                color = Color.Magenta,
             )
         }
     }
@@ -122,7 +117,6 @@ fun CardsList(modifier: Modifier = Modifier){
     Column(
         modifier = Modifier
             .fillMaxSize()
-//            .background(color = Color.Red)
     ) {
         var sliderPosition by remember { mutableFloatStateOf(1f) }
         Row(
@@ -185,14 +179,6 @@ fun CardsList(modifier: Modifier = Modifier){
             modifier = Modifier
                 .fillMaxSize()
         ) {
-//            Column(
-//                modifier = Modifier
-//                    .fillMaxSize()
-//                    .weight(1f)
-//                    .background(color = Color.Blue)
-//            ) {
-//
-//            }
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -230,7 +216,7 @@ fun TaskListPreview(){
 fun TaskCardPreview() {
     TodoTrackerTheme() {
         TaskCard(
-            task = TaskItem(name = "test", stepsTotal = 3),
+            task = TaskItem(name = "test", stepsCompleted = 1, stepsTotal = 3),
             onCompleteStep = {},
             onDelete = {})
     }
