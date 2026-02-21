@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
@@ -122,6 +123,13 @@ fun TaskCard(
                 fontWeight = FontWeight.Bold,
                 textDecoration = if (task.isComplete) TextDecoration.LineThrough else null
             )
+            IconButton(
+                onClick = onDelete,
+                modifier = Modifier
+                    .padding(16.dp)
+            ) {
+                Icon(Icons.Default.Delete, contentDescription = "Delete task")
+            }
         }
         Box(
 //            verticalAlignment = Alignment.CenterVertically,
@@ -179,7 +187,7 @@ fun CardsList(modifier: Modifier = Modifier){
                     taskItems.add(
                         TaskItem(
                             name = taskText,
-                            stepsTotal = 1)
+                            stepsTotal = sliderPosition.toInt())
                     )
                     taskText = ""
                 }
@@ -230,7 +238,8 @@ fun CardsList(modifier: Modifier = Modifier){
                     items(taskItems) { taskItem ->
                         TaskCard(taskItem, onBarClick = {
                             val index = taskItems.indexOf(taskItem)
-                            taskItems[index] = taskItem.copy(stepsCompleted = taskItem.stepsCompleted+1)
+                            val isCompleted = taskItem.stepsCompleted >= taskItem.stepsTotal
+                            taskItems[index] = taskItem.copy(stepsCompleted = taskItem.stepsCompleted+1, isComplete = isCompleted)
                         },
                             onDelete = {
                                 taskItems.remove(taskItem)
