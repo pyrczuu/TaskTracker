@@ -20,8 +20,11 @@ import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
@@ -39,7 +42,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SweepGradientShader
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -66,7 +71,8 @@ fun CustomProgressIndicator(
 //            .clip(RoundedCornerShape(32.dp))
             .drawWithContent(onDraw = {
                 drawRoundRect(
-                    color = color,
+                    brush = Brush.horizontalGradient(colors = listOf(Color.Green, Color.Yellow)),
+//                    color = color,
                     size = Size(width = (task.stepsCompleted.toFloat()/task.stepsTotal) * size.width, height = size.height)
                 )
             })
@@ -89,7 +95,7 @@ fun CustomProgressIndicator(
 fun CustomProgressPreview(){
     TodoTrackerTheme() {
         CustomProgressIndicator(
-            task = TaskItem(name = "test", stepsCompleted = 2, stepsTotal = 3),
+            task = TaskItem(name = "test", stepsCompleted = 3, stepsTotal = 3),
             color = Color.Red,
         )
     }
@@ -101,15 +107,20 @@ fun TaskCard(
     onDelete: () -> Unit,
     onBarClick: () -> Unit
 ) {
-    Card(
+    ElevatedCard(
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 6.dp
+        ),
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
             .clip(shape = RoundedCornerShape(32.dp))
+            .background(color = MaterialTheme.colorScheme.primary)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center,
+            modifier = Modifier.background(color = MaterialTheme.colorScheme.primary)
         ) {
             Text(
                 modifier = Modifier
@@ -117,7 +128,7 @@ fun TaskCard(
                     .padding(vertical = 32.dp),
                 textAlign = TextAlign.Center,
                 text = task.name + task.stepsTotal.toString(),
-                color = Color.Black,
+                color = Color.White,
                 fontSize = 24.sp,
                 fontFamily = FontFamily.Default,
                 fontWeight = FontWeight.Bold,
@@ -127,6 +138,8 @@ fun TaskCard(
                 onClick = onDelete,
                 modifier = Modifier
                     .padding(16.dp)
+                    .clip(RoundedCornerShape(32.dp))
+                    .background(color = Color.White)
             ) {
                 Icon(Icons.Default.Delete, contentDescription = "Delete task")
             }
@@ -141,7 +154,7 @@ fun TaskCard(
         ) {
             CustomProgressIndicator(
                 task = task,
-                color = Color.Magenta,
+                color = MaterialTheme.colorScheme.primary,
             )
             Button(
                 modifier = Modifier
@@ -165,6 +178,7 @@ fun CardsList(modifier: Modifier = Modifier){
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(color = MaterialTheme.colorScheme.background)
     ) {
         var sliderPosition by remember { mutableFloatStateOf(1f) }
         Row(
@@ -180,7 +194,7 @@ fun CardsList(modifier: Modifier = Modifier){
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
-                    .background(color = Color.White)
+                    .background(color = MaterialTheme.colorScheme.onPrimary)
             )
             IconButton(onClick = {
                 if (taskText.isNotBlank()){
